@@ -15,7 +15,6 @@ let walker = document.createTreeWalker(
 );
 
 function wordToSkrt(arg) {
-
   let hasDot = false
   let hasCapitalLetter = false
   const word = arg.split('')
@@ -84,7 +83,3 @@ while (walker.nextNode()) {
   }
 }
 
-
-
-
-chrome.browserAction.onClicked.addListener(function(tab) { getRektSon()});

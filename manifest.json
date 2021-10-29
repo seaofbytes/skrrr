@@ -1,10 +1,10 @@
 {
     "manifest_version": 2,
     "name": "Skrrrtify",
-    "version": "1.0.0",
+    "version": "2",
     "description": "Skrrrt everything.",
     "short_name": "Skrrr",
-    "permissions": ["activeTab", "declarativeContent", "storage", "<all_urls>"],
+    "permissions": ["activeTab"],
     "background": {
       "scripts": ["skrrrt.js"]
     },
@@ -14,11 +14,11 @@
         "js": ["skrrrt.js"]
       }
     ],
-    "browser_action": {
-    },
+    "action": {},
+    "browser_action": {},
     "web_accessible_resources": [
-      "airhorn.mp3",
-      "skrrrrrr.mp3"
+      "sounds/airhorn.mp3",
+      "sounds/skrrrrrr.mp3"
   ]
 
    }

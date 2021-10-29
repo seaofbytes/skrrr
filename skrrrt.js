@@ -1,7 +1,7 @@
-var airhorn = new Audio(chrome.runtime.getURL("airhorn.mp3"));
-airhorn.play();
-var skrrrrrr = new Audio(chrome.runtime.getURL("skrrrrrr.mp3"));
+var airhorn = new Audio(chrome.runtime.getURL("sounds/airhorn.mp3"));
+var skrrrrrr = new Audio(chrome.runtime.getURL("sounds/skrrrrrr.mp3"));
 skrrrrrr.play();
+airhorn.play();
 
 let walker = document.createTreeWalker(
   document.body,
@@ -14,47 +14,77 @@ let walker = document.createTreeWalker(
   false
 );
 
-let count = 0;
+function wordToSkrt(arg) {
 
-setTimeout(() => {
-  while (walker.nextNode()) {
-    let tags = [
-      "P",
-      "SPAN",
-      "INPUT",
-      "LABEL",
-      "H1",
-      "H2",
-      "H3",
-      "H4",
-      "H5",
-      "TD",
-    ];
+  let hasDot = false
+  let hasCapitalLetter = false
+  const word = arg.split('')
+  if( word === undefined && word === null) return
 
-    let yolo = ["Skrrrt ", "Skrrrrr ", "Brrr ", "Brrrraaa ", "Skkkk "];
+  const wordLength = word.length
 
-    if (tags.includes(walker.currentNode.tagName)) {
-      let x = walker.currentNode.textContent.split(" ");
-      let newVal = "";
+  if(word[wordLength-1] === '.') hasDot = true
+  if(word[0] === word[0].toUpperCase()) hasCapitalLetter = true
 
-      x.forEach((n) => {
-        let swag = Math.floor(Math.random() * (5 - 1 + 1) + 1) - 1;
-        newVal += yolo[swag];
-      });
+  if (wordLength === 1 || !wordLength) return arg
+  if (wordLength === 2 && hasCapitalLetter) return "Sk"
+  if (wordLength === 2 && !hasCapitalLetter) return "sk"
+  if (wordLength === 3 && hasCapitalLetter) return "Skr"
+  if (wordLength === 3 && !hasCapitalLetter) return "skr"
+  if (wordLength === 4 && hasCapitalLetter && hasDot) return "Skr."
+  if (wordLength === 4 && hasCapitalLetter && !hasDot) return "Skrt"
+  if (wordLength === 4 && !hasCapitalLetter && hasDot) return "skr."
+  if (wordLength === 4 && !hasCapitalLetter && !hasDot) return "skrt"
 
-      if (walker.currentNode.tagName === "A") {
-        walker.currentNode.textContent = "Skrrrrt Skrrrt";
-      }
 
-      if (walker.currentNode.tagName === "BUTTON") {
-        walker.currentNode.textContent = "Skrrrrt";
-      }
+  const first = hasCapitalLetter ? "Sk" : "sk"
+  const last = hasDot ? "t." : "t"
+  const middle = "r"
 
-      if (walker.currentNode.tagName === "LI") {
-        walker.currentNode.textContent = "Skrrrrt Skrrrt";
-      }
+  const middleMultiplier = wordLength - (first.length + last.length)
+  const replacementStr = first + middle.repeat(middleMultiplier) + last
 
-      walker.currentNode.textContent = newVal;
-    }
+  return replacementStr
+}
+
+const tags = [
+  "P",
+  "SPAN",
+  "INPUT",
+  "LABEL",
+  "H1",
+  "H2",
+  "H3",
+  "H4",
+  "H5",
+  "TD",
+  "A",
+  "LI",
+];
+
+
+while (walker.nextNode()) {
+  const node = walker.currentNode;
+
+  if (tags.includes(node.tagName)) {
+    const words = node.textContent.trim().split(" ");
+    let replacementText = ''
+
+    words.forEach((word) => {
+      if (word && word !== undefined) {
+        replacementText+= " " + wordToSkrt(word)
+      } 
+    });
+
+    node.textContent = replacementText;
   }
-}, 240);
+
+  if (node.tagName === "BUTTON") {
+    node.textContent = "Skrrrrt";
+  }
+}
+
+
+
+
+chrome.browserAction.onClicked.addListener(function(tab) { getRektSon()});
